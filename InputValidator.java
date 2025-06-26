@@ -6,8 +6,9 @@ public class InputValidator {
         if (input == null || input.trim().isEmpty()) {
             return false;
         }
-        return input.matches("^[a-zA-Z0-9]+$");
+        return input.matches("^[a-zA-Z0-9 ]+$");
     }
+
     public static String askValidInput() {
         Scanner scanner = new Scanner(System.in);
         String input;
@@ -27,7 +28,7 @@ public class InputValidator {
 
     public static String askValidBase() {
         Scanner scanner = new Scanner(System.in);
-        String[] validBases = {"-b", "-h", "-d", "-o", "-t"};
+        String[] validBases = {"-b", "binaire", "-h", "hexadecimal", "hexadécimal", "-d", "décimal", "decimal", "-o", "octal", "-t", "texte"};
         String input;
 
         while(true) {

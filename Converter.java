@@ -13,15 +13,21 @@ public class Converter {
 
             switch (base) {
                 case "-b":
+                case "binaire":
                     converted = BaseConverter.toBinary(ascii);
                     break;
                 case "-o":
+                case "octal":
                     converted = BaseConverter.toOctal(ascii);
                     break;
                 case "-d":
+                case "decimal":
+                case "décimal":
                     converted = BaseConverter.toDecimal(ascii);
                     break;
                 case "-h":
+                case "hexadecimal":
+                case "hexadécimal":
                     converted = BaseConverter.toHex(ascii);
                     break;
                 default:
@@ -45,15 +51,21 @@ public class Converter {
 
             switch (base) {
                 case "-b":
+                case "binaire":
                     ascii = BaseConverter.fromBinary(block);
                     break;
                 case "-o":
+                case "octal":
                     ascii = BaseConverter.fromOctal(block);
                     break;
                 case "-d":
+                case "decimal":
+                case "décimal":
                     ascii = BaseConverter.fromDecimal(block);
                     break;
                 case "-h":
+                case "hexadecimal":
+                case "hexadécimal":
                     ascii = BaseConverter.fromHex(block);
                     break;
                 default:

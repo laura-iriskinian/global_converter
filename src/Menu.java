@@ -14,18 +14,21 @@ public class Menu {
 
         while (continueProgram) {
             // Ask source format
-            System.out.println("Please select the original format you want to convert: ");
+            System.out.println("\nPlease select the format of your input: ");
             String sourceFormat = getValidFormat();
 
             // Get valid input to convert
             String conversionText = getValidInput(sourceFormat);
 
+            // Ask if user wants to encrypt/decrypt their input
+            String processedText = askForEncryption(conversionText);
+
             // Get target format
-            System.out.println("Please select in what format you wish to convert your input: ");
+            System.out.println("\nPlease select in what format you wish to convert your input: ");
             String targetFormat = getValidFormat();
 
             // Create the conversion object and convert format
-            Conversion converter = new Conversion(conversionText, sourceFormat, targetFormat);
+            Conversion converter = new Conversion(processedText, sourceFormat, targetFormat);
 
             // Display the converted format
             String result = converter.performConversion();
@@ -37,6 +40,73 @@ public class Menu {
 
         displayGoodbye();
         scanner.close();
+    }
+
+    // NEW METHOD: Ask if user wants to encrypt/decrypt
+    private String askForEncryption(String text) {
+        System.out.println("\nDo you want to encrypt or decrypt this input before conversion?");
+        System.out.println("1. No encryption (proceed as normal)");
+        System.out.println("2. Encrypt text");
+        System.out.println("3. Decrypt text");
+
+        int choice;
+        boolean validChoice = false;
+
+        do {
+            System.out.print("Your choice (1, 2, or 3): ");
+            try {
+                choice = Integer.parseInt(scanner.nextLine().trim());
+                if (choice >= 1 && choice <= 3) {
+                    validChoice = true;
+                } else {
+                    System.out.println("Please enter 1, 2, or 3.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number (1, 2, or 3).");
+                choice = 1; // Default to no encryption
+            }
+        } while (!validChoice);
+
+        if (choice == 1) {
+            return text; // No encryption
+        } else {
+            int shift = getValidShift();
+
+            if (choice == 2) {
+                // Encrypt
+                String encrypted = Encryption.encrypt(text, shift);
+                System.out.println("Encrypted text: " + encrypted);
+                return encrypted;
+            } else {
+                // Decrypt
+                String decrypted = Encryption.decrypt(text, shift);
+                System.out.println("Decrypted text: " + decrypted);
+                return decrypted;
+            }
+        }
+    }
+
+    // Get valid shift value
+    private int getValidShift() {
+        int shift;
+        boolean validShift = false;
+
+        do {
+            System.out.print("\nEnter the shift value (1-25): ");
+            try {
+                shift = Integer.parseInt(scanner.nextLine().trim());
+                if (shift >= 1 && shift <= 25) {
+                    validShift = true;
+                } else {
+                    System.out.println("Please enter a number between 1 and 25.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+                shift = 1; // Default value
+            }
+        } while (!validShift);
+
+        return shift;
     }
 
     private void displayWelcome() {
@@ -85,8 +155,7 @@ public class Menu {
     }
 
     private String getValidInput(String format) {
-        String formatName = getFormatDisplayName(format);
-        System.out.println("Please type what you would like to convert in format " + formatName);
+        System.out.println("\nPlease type what you would like to convert");
         System.out.println("(No special characters, only alphanumeric characters): ");
 
         String conversionText;
@@ -99,7 +168,7 @@ public class Menu {
                 validInput = true;
                 System.out.println("Valid input: \n" + conversionText);
             } else {
-                System.out.println("Invalid input (not expected " + formatName + " format");
+                System.out.println("Invalid input (unexpected format");
                 System.out.println("Please enter only alphanumeric characters and spaces.");
                 System.out.print("New input: ");
             }
@@ -164,32 +233,32 @@ public class Menu {
         switch (format.toLowerCase()) {
             case "text":
             case "-t":
-                System.out.println("   Exemple: Hello World");
-                System.out.println("   Caractères autorisés: lettres, chiffres, espaces, ponctuation de base");
+                System.out.println("   Example: Hello World");
+                System.out.println("   Authorised characters: letters, numbers, spaces, NO PUNCTUATION");
                 break;
 
             case "hexadecimal":
             case "-h":
-                System.out.println("   Exemple: 48 65 6C 6C 6F (pour 'Hello')");
-                System.out.println("   Caractères autorisés: 0-9, A-F (séparés par des espaces)");
+                System.out.println("   Example: 48 65 6C 6C 6F (for 'Hello')");
+                System.out.println("   Authorised characters: 0-9, A-F (separated by spaces)");
                 break;
 
             case "octal":
             case "-o":
-                System.out.println("   Exemple: 110 145 154 154 157 (pour 'Hello')");
-                System.out.println("   Caractères autorisés: 0-7 (séparés par des espaces)");
+                System.out.println("   Example: 110 145 154 154 157 (for 'Hello')");
+                System.out.println("   Authorised characters: 0-7 (separated by spaces)");
                 break;
 
             case "decimal":
             case "-d":
-                System.out.println("   Exemple: 72 101 108 108 111 (codes ASCII pour 'Hello')");
-                System.out.println("   Caractères autorisés: 0-9 (séparés par des espaces)");
+                System.out.println("   Example: 72 101 108 108 111 (ASCII codes for 'Hello')");
+                System.out.println("   Authorised characters: 0-9 (separated by spaces)");
                 break;
 
             case "binary":
             case "-b":
-                System.out.println("   Exemple: 1001000 1100101 1101100 1101100 1101111 (pour 'Hello')");
-                System.out.println("   Caractères autorisés: 0 et 1 (séparés par des espaces)");
+                System.out.println("   Example: 1001000 1100101 1101100 1101100 1101111 (for 'Hello')");
+                System.out.println("   Authorised characters: 0 et 1 (separated by spaces)");
                 break;
         }
     }
@@ -238,5 +307,3 @@ public class Menu {
         System.out.println("\nThanks for using Global Converter, HAVE A NICE DAY!");
     }
 }
-
-

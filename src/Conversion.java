@@ -1,9 +1,7 @@
-
 public class Conversion {
     public String conversionText;
     public String sourceFormat;
     public String targetFormat;
-
 
     public Conversion(String conversionText, String sourceFormat, String targetFormat) {
         this.conversionText = conversionText;
@@ -11,250 +9,177 @@ public class Conversion {
         this.targetFormat = targetFormat;
     }
 
-    // Conversion from source format to ASCII
-
-    public String textToASCII() {
-        StringBuilder result = new StringBuilder();
-
-        for (int i = 0; i < this.conversionText.length(); i++) {
-            char currentChar = this.conversionText.charAt(i);
-
-            // Converts direct into ASCII
-            int asciiCode = (int) currentChar;
-            result.append(asciiCode);
-
-            // Add a space between the codes except the last one
-            if (i < this.conversionText.length() - 1) {
-                result.append(" ");
-            }
-        }
-
-        return result.toString();
-    }
-
-    public String hexadecimalToASCII(String hexInput) {
-        StringBuilder result = new StringBuilder();
-        String[] hexValues = hexInput.trim().split("\\s+");
-
-        for (int i = 0; i < hexValues.length; i++) {
-            try {
-                int asciiValue = hexToDecimal(hexValues[i]);
-                result.append(asciiValue);
-
-                if (i < hexValues.length - 1) {
-                    result.append(" ");
-                }
-            } catch (Exception e) {
-                result.append("?");
-                if (i < hexValues.length - 1) {
-                    result.append(" ");
-                }
-            }
-        }
-
-        return result.toString();
-    }
-
-    public String octalToASCII(String octalInput) {
-        StringBuilder result = new StringBuilder();
-        String[] octalValues = octalInput.trim().split("\\s+");
-
-        for (int i = 0; i < octalValues.length; i++) {
-            try {
-                int asciiValue = octalToDecimal(octalValues[i]);
-                result.append(asciiValue);
-
-                if (i < octalValues.length - 1) {
-                    result.append(" ");
-                }
-            } catch (Exception e) {
-                result.append("?");
-                if (i < octalValues.length - 1) {
-                    result.append(" ");
-                }
-            }
-        }
-
-        return result.toString();
-    }
-
-    public String decimalToASCII(String decimalInput) {
-        // ASCII is already decimal
-        return decimalInput.trim();
-    }
-
-    public String binaryToASCII(String binaryInput) {
-        StringBuilder result = new StringBuilder();
-        String[] binaryValues = binaryInput.trim().split("\\s+");
-
-        for (int i = 0; i < binaryValues.length; i++) {
-            try {
-                int asciiValue = binaryToDecimal(binaryValues[i]);
-                result.append(asciiValue);
-
-                if (i < binaryValues.length - 1) {
-                    result.append(" ");
-                }
-            } catch (Exception e) {
-                result.append("?");
-                if (i < binaryValues.length - 1) {
-                    result.append(" ");
-                }
-            }
-        }
-
-        return result.toString();
-    }
-
-    // Conversion from ASCII to target
-
-    public String ASCIIToText(String asciiCodes) {
-        StringBuilder result = new StringBuilder();
-        String[] codes = asciiCodes.trim().split("\\s+");
-
-        for (String code : codes) {
-            try {
-                int asciiValue = stringToInt(code);
-                if (asciiValue >= 0 && asciiValue <= 127) { // valid ASCII
-                    result.append((char) asciiValue);
-                }
-            } catch (NumberFormatException e) {
-                result.append("?"); // result if unknown character
-            }
-        }
-
-        return result.toString();
-    }
-
-    public String ASCIIToHexadecimal(String asciiCodes) {
-        StringBuilder result = new StringBuilder();
-        String[] codes = asciiCodes.trim().split("\\s+");
-
-        for (int i = 0; i < codes.length; i++) {
-            try {
-                int asciiValue = stringToInt(codes[i]);
-                String hex = decimalToHex(asciiValue);
-                result.append(hex.toUpperCase());
-
-                if (i < codes.length - 1) {
-                    result.append(" ");
-                }
-            } catch (NumberFormatException e) {
-                result.append("?");
-                if (i < codes.length - 1) {
-                    result.append(" ");
-                }
-            }
-        }
-
-        return result.toString();
-    }
-
-    public String ASCIIToOctal(String asciiCodes) {
-        StringBuilder result = new StringBuilder();
-        String[] codes = asciiCodes.trim().split("\\s+");
-
-        for (int i = 0; i < codes.length; i++) {
-            try {
-                int asciiValue = stringToInt(codes[i]);
-                String octal = decimalToOctal(asciiValue);
-                result.append(octal);
-
-                if (i < codes.length - 1) {
-                    result.append(" ");
-                }
-            } catch (NumberFormatException e) {
-                result.append("?");
-                if (i < codes.length - 1) {
-                    result.append(" ");
-                }
-            }
-        }
-
-        return result.toString();
-    }
-
-    public String ASCIIToDecimal(String asciiCodes) {
-        // ASCII is decimal
-        return asciiCodes;
-    }
-
-    public String ASCIIToBinary(String asciiCodes) {
-        StringBuilder result = new StringBuilder();
-        String[] codes = asciiCodes.trim().split("\\s+");
-
-        for (int i = 0; i < codes.length; i++) {
-            try {
-                int asciiValue = stringToInt(codes[i]);
-                String binary = decimalToBinary(asciiValue);
-                result.append(binary);
-
-                if (i < codes.length - 1) {
-                    result.append(" ");
-                }
-            } catch (NumberFormatException e) {
-                result.append("?");
-                if (i < codes.length - 1) {
-                    result.append(" ");
-                }
-            }
-        }
-
-        return result.toString();
-    }
-
-    // Perform conversion
-
+    // Main conversion method
     public String performConversion() {
-        // SourceFormat -> ASCII
-        String asciiCodes = convertSourceToASCII();
-
-        // ASCII → targetFormat
-        return convertASCIIToTarget(asciiCodes);
+        // Direct conversion : source → target
+        String text = convertToText();
+        return convertFromText(text);
     }
 
-    private String convertSourceToASCII() {
+    // Converts source format to text
+    private String convertToText() {
         switch (this.sourceFormat.toLowerCase()) {
             case "text":
             case "-t":
-                return textToASCII();
+                return this.conversionText;
             case "hexadecimal":
             case "-h":
-                return hexadecimalToASCII(this.conversionText);
+                return hexToText(this.conversionText);
             case "octal":
             case "-o":
-                return octalToASCII(this.conversionText);
+                return octalToText(this.conversionText);
             case "decimal":
             case "-d":
-                return decimalToASCII(this.conversionText);
+                return decimalToText(this.conversionText);
             case "binary":
             case "-b":
-                return binaryToASCII(this.conversionText);
+                return binaryToText(this.conversionText);
             default:
                 return "Erreur: Format source inconnu";
         }
     }
 
-    private String convertASCIIToTarget(String asciiCodes) {
+    // Converts text to target format
+    private String convertFromText(String text) {
         switch (this.targetFormat.toLowerCase()) {
             case "text":
             case "-t":
-                return ASCIIToText(asciiCodes);
+                return text;
             case "hexadecimal":
             case "-h":
-                return ASCIIToHexadecimal(asciiCodes);
+                return textToHex(text);
             case "octal":
             case "-o":
-                return ASCIIToOctal(asciiCodes);
+                return textToOctal(text);
             case "decimal":
             case "-d":
-                return ASCIIToDecimal(asciiCodes);
+                return textToDecimal(text);
             case "binary":
             case "-b":
-                return ASCIIToBinary(asciiCodes);
+                return textToBinary(text);
             default:
                 return "Erreur: Format cible inconnu";
         }
+    }
+
+    // ========== CONVERSION TO TEXT ==========
+
+    private String hexToText(String hexInput) {
+        StringBuilder result = new StringBuilder();
+        String[] hexValues = hexInput.trim().split("\\s+");
+
+        for (String hex : hexValues) {
+            try {
+                int asciiValue = hexToDecimal(hex);
+                if (asciiValue >= 0 && asciiValue <= 127) {
+                    result.append((char) asciiValue);
+                }
+            } catch (Exception e) {
+                result.append("?");
+            }
+        }
+        return result.toString();
+    }
+
+    private String octalToText(String octalInput) {
+        StringBuilder result = new StringBuilder();
+        String[] octalValues = octalInput.trim().split("\\s+");
+
+        for (String octal : octalValues) {
+            try {
+                int asciiValue = octalToDecimal(octal);
+                if (asciiValue >= 0 && asciiValue <= 127) {
+                    result.append((char) asciiValue);
+                }
+            } catch (Exception e) {
+                result.append("?");
+            }
+        }
+        return result.toString();
+    }
+
+    private String decimalToText(String decimalInput) {
+        StringBuilder result = new StringBuilder();
+        String[] decimalValues = decimalInput.trim().split("\\s+");
+
+        for (String decimal : decimalValues) {
+            try {
+                int asciiValue = stringToInt(decimal);
+                if (asciiValue >= 0 && asciiValue <= 127) {
+                    result.append((char) asciiValue);
+                }
+            } catch (Exception e) {
+                result.append("?");
+            }
+        }
+        return result.toString();
+    }
+
+    private String binaryToText(String binaryInput) {
+        StringBuilder result = new StringBuilder();
+        String[] binaryValues = binaryInput.trim().split("\\s+");
+
+        for (String binary : binaryValues) {
+            try {
+                int asciiValue = binaryToDecimal(binary);
+                if (asciiValue >= 0 && asciiValue <= 127) {
+                    result.append((char) asciiValue);
+                }
+            } catch (Exception e) {
+                result.append("?");
+            }
+        }
+        return result.toString();
+    }
+
+    // ========== CONVERSION FROM TEXT ==========
+
+    private String textToHex(String text) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            int asciiValue = (int) text.charAt(i);
+            result.append(decimalToHex(asciiValue).toUpperCase());
+            if (i < text.length() - 1) {
+                result.append(" ");
+            }
+        }
+        return result.toString();
+    }
+
+    private String textToOctal(String text) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            int asciiValue = (int) text.charAt(i);
+            result.append(decimalToOctal(asciiValue));
+            if (i < text.length() - 1) {
+                result.append(" ");
+            }
+        }
+        return result.toString();
+    }
+
+    private String textToDecimal(String text) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            int asciiValue = (int) text.charAt(i);
+            result.append(asciiValue);
+            if (i < text.length() - 1) {
+                result.append(" ");
+            }
+        }
+        return result.toString();
+    }
+
+    private String textToBinary(String text) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            int asciiValue = (int) text.charAt(i);
+            result.append(decimalToBinary(asciiValue));
+            if (i < text.length() - 1) {
+                result.append(" ");
+            }
+        }
+        return result.toString();
     }
 
     // ========== UTILITARY METHODS ==========
@@ -269,7 +194,6 @@ public class Conversion {
             hex.insert(0, hexChars[decimal % 16]);
             decimal /= 16;
         }
-
         return hex.toString();
     }
 
@@ -277,12 +201,10 @@ public class Conversion {
         if (decimal == 0) return "0";
 
         StringBuilder octal = new StringBuilder();
-
         while (decimal > 0) {
             octal.insert(0, decimal % 8);
             decimal /= 8;
         }
-
         return octal.toString();
     }
 
@@ -290,12 +212,10 @@ public class Conversion {
         if (decimal == 0) return "0";
 
         StringBuilder binary = new StringBuilder();
-
         while (decimal > 0) {
             binary.insert(0, decimal % 2);
             decimal /= 2;
         }
-
         return binary.toString();
     }
 
@@ -350,28 +270,6 @@ public class Conversion {
             power++;
         }
         return decimal;
-    }
-
-    private String getFormatDisplayName(String format) {
-        switch (format.toLowerCase()) {
-            case "text":
-            case "-t":
-                return "text";
-            case "hexadecimal":
-            case "-h":
-                return "hexadecimal";
-            case "octal":
-            case "-o":
-                return "octal";
-            case "decimal":
-            case "-d":
-                return "decimal";
-            case "binary":
-            case "-b":
-                return "binary";
-            default:
-                return format;
-        }
     }
 
     private int power(int base, int exp) {

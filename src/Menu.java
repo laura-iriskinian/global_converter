@@ -42,7 +42,7 @@ public class Menu {
         scanner.close();
     }
 
-    // NEW METHOD: Ask if user wants to encrypt/decrypt
+    // Ask if user wants to encrypt/decrypt
     private String askForEncryption(String text) {
         System.out.println("\nDo you want to encrypt or decrypt this input before conversion?");
         System.out.println("1. No encryption (proceed as normal)");
@@ -168,7 +168,7 @@ public class Menu {
                 validInput = true;
                 System.out.println("Valid input: \n" + conversionText);
             } else {
-                System.out.println("Invalid input (unexpected format");
+                System.out.println("Invalid input (unexpected format)");
                 System.out.println("Please enter only alphanumeric characters and spaces.");
                 System.out.print("New input: ");
             }

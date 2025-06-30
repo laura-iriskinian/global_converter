@@ -9,14 +9,14 @@ public class Encryption {
             shift = -shift;
         }
 
-        // Normalize shift to be positive
+        // Normalize shift to be positive (extra security with Menu to avoid negative or very big numbers)
         shift = ((shift % 26) + 26) % 26;
 
         for (int i = 0; i < text.length(); i++) {
             char currentChar = text.charAt(i);
 
             if (Character.isLetter(currentChar)) {
-                // Determine if uppercase or lowercase
+                // Determine if uppercase or lowercase to keep the case in encryption/decryption
                 char base = Character.isUpperCase(currentChar) ? 'A' : 'a';
 
                 // Apply shift

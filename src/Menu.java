@@ -31,8 +31,7 @@ public class Menu {
             Conversion converter = new Conversion(processedText, sourceFormat, targetFormat);
 
             // Display the converted format
-            String result = converter.performConversion();
-            System.out.println("Result: " + result);
+            System.out.println("Result: " + converter.performConversion());
 
             //Ask if user wants to continue
             continueProgram = askToContinue();
@@ -156,20 +155,21 @@ public class Menu {
 
     private String getValidInput(String format) {
         System.out.println("\nPlease type what you would like to convert");
-        System.out.println("(No special characters, only alphanumeric characters): ");
+        // Show examples
+        displayFormatHelpMessage(format);
 
         String conversionText;
         boolean validInput = false;
         do {
+            System.out.print("Your input: ");
             conversionText = scanner.nextLine().trim();
 
-            // Check if input is valid (letters, numbers and spaces only)
-            if (conversionText.matches("[a-zA-Z0-9 ]+") && !conversionText.isEmpty()) {
+            if (isValidInputForFormat(conversionText, format)) {
                 validInput = true;
-                System.out.println("Valid input: \n" + conversionText);
+                System.out.println("Valid input: " + conversionText);
             } else {
-                System.out.println("Invalid input (unexpected format)");
-                System.out.println("Please enter only alphanumeric characters and spaces.");
+                System.out.println("Invalid input for " + getFormatDisplayName(format) + " format!");
+                displayFormatHelpMessage(format);
                 System.out.print("New input: ");
             }
         } while (!validInput);

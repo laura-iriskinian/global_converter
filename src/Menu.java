@@ -263,16 +263,6 @@ public class Menu {
         }
     }
 
-    private String performConversion(String inputText, String sourceFormat, String targetFormat) {
-        // Create Conversion object with source and target format
-        Conversion converter = new Conversion(inputText, sourceFormat, targetFormat);
-
-        // Perform conversion
-        String result = converter.performConversion();
-
-        return converter.performConversion();
-    }
-
     private String getFormatDisplayName(String format) {
         switch (format.toLowerCase()) {
             case "text":
